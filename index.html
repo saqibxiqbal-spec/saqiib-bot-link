@@ -23,6 +23,24 @@
 
   <div class="card">
 
+    <div class="tabs">
+      <button class="tab active" id="tabQr" data-pane="paneQr">📷 QR scan <span class="rec">best</span></button>
+      <button class="tab" id="tabCode" data-pane="paneCode">🔢 Pairing code</button>
+    </div>
+
+    <!-- ================= QR PANE ================= -->
+    <div class="pane active" id="paneQr">
+      <div class="qr-wrap">
+        <img id="qr" alt="WhatsApp QR code" src="">
+        <div class="qr-overlay" id="qrOverlay"><span class="spin"></span></div>
+      </div>
+      <p class="qr-tip">WhatsApp → <b>Settings</b> → <b>Linked Devices</b> → <b>Link a Device</b> → yeh QR scan karein</p>
+      <div class="timer" id="qrTimer">QR taiyar ho raha hai…</div>
+      <button class="btn ghost" id="qrNew">🔄 Naya QR</button>
+    </div>
+
+    <!-- ================= CODE PANE ================= -->
+    <div class="pane" id="paneCode">
     <label for="num">WhatsApp number</label>
     <div class="phone-row">
       <select id="cc" aria-label="Country code">
@@ -63,6 +81,8 @@
         <li><b>“Link with phone number instead”</b> par tap karein</li>
         <li>Upar wala <b>8-digit code</b> wahan daalein</li>
       </ol>
+    </div>
+
     </div>
 
     <div class="status" id="status"></div>
