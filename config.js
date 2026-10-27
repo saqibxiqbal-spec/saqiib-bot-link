@@ -1,3 +1,3 @@
 // Backend (SAQIIB BOT) ka public URL.
-// Isay badalne ke baad Vercel par redeploy karein.
-window.SAQIIB_BACKEND = "https://88dfed0dc70c89.lhr.life";
+// Auto-synced by tunnel.sh — manual edit ki zaroorat nahi.
+window.SAQIIB_BACKEND = "https://c5e8582188949c.lhr.life";
