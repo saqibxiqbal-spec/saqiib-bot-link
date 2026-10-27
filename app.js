@@ -123,7 +123,7 @@
   }
 
   // ---------------- main action ----------------
-  function requestCode() {
+  function requestCode(force) {
     var n = fullNumber();
     if (n.length < 8) {
       setStatus('error', 'Number sahi nahi hai — poora number likhein.');
@@ -136,12 +136,21 @@
     }
 
     goEl.disabled = true;
+    againEl.disabled = true;
     goEl.textContent = 'Code ban raha hai…';
     clearStatus();
     setStatus('info', 'WhatsApp se code maang rahe hain…', true);
     stopTimers();
 
-    api('/api/pair', { method: 'POST', body: JSON.stringify({ number: n }) })
+    // "Naya code lein" -> pehle purani session reset karein, taake FRESH code mile
+    var pre = force
+      ? api('/api/pair/reset', { method: 'POST', body: JSON.stringify({ number: n }) })
+          .catch(function () {})
+      : Promise.resolve();
+
+    pre.then(function () {
+      return api('/api/pair', { method: 'POST', body: JSON.stringify({ number: n }) });
+    })
       .then(function (r) {
         var b = r.body || {};
         if (b.code) {
@@ -163,15 +172,16 @@
       })
       .finally(function () {
         goEl.disabled = false;
+        againEl.disabled = false;
         goEl.textContent = 'Get Pairing Code';
       });
   }
 
   // ---------------- events ----------------
-  goEl.addEventListener('click', requestCode);
-  againEl.addEventListener('click', requestCode);
+  goEl.addEventListener('click', function () { requestCode(false); });
+  againEl.addEventListener('click', function () { requestCode(true); });
   numEl.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') requestCode();
+    if (e.key === 'Enter') requestCode(false);
   });
   numEl.addEventListener('input', function () {
     numEl.value = numEl.value.replace(/[^\d\s-]/g, '');
