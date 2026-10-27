@@ -122,6 +122,81 @@
     }, 3000);
   }
 
+
+  // ================= QR FLOW =================
+  var qrEl = $('qr'), qrOverlay = $('qrOverlay'), qrTimer = $('qrTimer'),
+      qrNew = $('qrNew'), tabQr = $('tabQr'), tabCode = $('tabCode');
+  var qrPoll = null, qrTick = null, qrLeft = 0, qrBusy = false;
+
+  function qrSetBusy(b) {
+    qrBusy = b;
+    qrOverlay.classList.toggle('hide', !b);
+  }
+
+  function qrLoad() {
+    if (qrBusy) return;
+    qrSetBusy(true);
+    qrTimer.textContent = 'Naya QR ban raha hai…';
+    qrTimer.style.color = '#f0b429';
+
+    // Ask the bot for a genuinely fresh QR (WhatsApp refs die in ~20s)
+    api('/api/qr/fresh', { method: 'POST' })
+      .then(function (r) {
+        if (!r.body || !r.body.ok) throw new Error('fresh failed');
+        return api('/api/qr/meta');
+      })
+      .then(function () {
+        qrEl.onload = function () { qrSetBusy(false); };
+        qrEl.onerror = function () { qrSetBusy(false); qrTimer.textContent = 'QR load nahi hua — "Naya QR" dabayen'; };
+        qrEl.src = BACKEND + '/api/qr-live?png=1&t=' + Date.now();
+        qrLeft = 20;
+        if (qrTick) clearInterval(qrTick);
+        qrTick = setInterval(function () {
+          qrLeft--;
+          if (qrLeft <= 0) { clearInterval(qrTick); qrTick = null; qrLoad(); return; }
+          qrTimer.textContent = 'QR ' + qrLeft + 's mein khud badal jayega';
+          qrTimer.style.color = qrLeft <= 5 ? '#f15c6d' : '#f0b429';
+        }, 1000);
+      })
+      .catch(function () {
+        qrSetBusy(false);
+        qrTimer.textContent = 'Backend se QR nahi mila — dobara koshish…';
+        qrTimer.style.color = '#f15c6d';
+      });
+  }
+
+  function qrWatch() {
+    if (qrPoll) return;
+    qrPoll = setInterval(function () {
+      api('/health').then(function (r) {
+        if (r.body && r.body.connected) {
+          clearInterval(qrPoll); qrPoll = null;
+          if (qrTick) { clearInterval(qrTick); qrTick = null; }
+          qrSetBusy(false);
+          qrTimer.textContent = '✅ Device link ho gaya — WhatsApp mein .menu bhejein';
+          qrTimer.style.color = '#00a884';
+          setStatus('ok', '✅ Link complete! Ab WhatsApp mein <b>.menu</b> bhejein.');
+        }
+      }).catch(function () {});
+    }, 3000);
+  }
+
+  // ================= TABS =================
+  function showPane(id) {
+    ['paneQr', 'paneCode'].forEach(function (p) {
+      var el = $(p);
+      if (el) el.classList.toggle('active', p === id);
+    });
+    tabQr.classList.toggle('active', id === 'paneQr');
+    tabCode.classList.toggle('active', id === 'paneCode');
+    clearStatus();
+    if (id === 'paneQr') { qrLoad(); qrWatch(); }
+  }
+
+  if (tabQr) tabQr.addEventListener('click', function () { showPane('paneQr'); });
+  if (tabCode) tabCode.addEventListener('click', function () { showPane('paneCode'); });
+  if (qrNew) qrNew.addEventListener('click', qrLoad);
+
   // ---------------- main action ----------------
   function requestCode(force) {
     var n = fullNumber();
@@ -207,4 +282,7 @@
 
   ping();
   setInterval(ping, 20000);
+
+  // QR is the default (and most reliable) path
+  showPane('paneQr');
 })();
