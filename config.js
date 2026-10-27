@@ -1,3 +1,3 @@
 // Backend (SAQIIB BOT) ka public URL.
-// Auto-synced by tunnel.sh — manual edit ki zaroorat nahi.
-window.SAQIIB_BACKEND = "https://c5e8582188949c.lhr.life";
+// Yeh file tunnel.sh se khud update hoti hai.
+window.SAQIIB_BACKEND = "https://2d076579f5a1b0.lhr.life";
