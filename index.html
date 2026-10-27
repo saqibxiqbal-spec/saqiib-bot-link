@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b141a">
+<title>SAQIIB BOT — Link Device</title>
+<meta name="description" content="Apna WhatsApp number daalein aur pairing code le kar bot ko link karein.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="logo">🤖</div>
+    <div>
+      <h1>SAQIIB BOT</h1>
+      <p>WhatsApp device link — pairing code</p>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <label for="num">WhatsApp number</label>
+    <div class="phone-row">
+      <select id="cc" aria-label="Country code">
+        <option value="92" selected>🇵🇰 +92</option>
+        <option value="91">🇮🇳 +91</option>
+        <option value="971">🇦🇪 +971</option>
+        <option value="966">🇸🇦 +966</option>
+        <option value="44">🇬🇧 +44</option>
+        <option value="1">🇺🇸 +1</option>
+        <option value="61">🇦🇺 +61</option>
+        <option value="49">🇩🇪 +49</option>
+        <option value="33">🇫🇷 +33</option>
+        <option value="90">🇹🇷 +90</option>
+        <option value="880">🇧🇩 +880</option>
+        <option value="977">🇳🇵 +977</option>
+        <option value="94">🇱🇰 +94</option>
+        <option value="60">🇲🇾 +60</option>
+        <option value="62">🇮🇩 +62</option>
+      </select>
+      <input id="num" type="tel" inputmode="numeric" autocomplete="tel"
+             placeholder="3008760205" maxlength="15" aria-label="Phone number without country code">
+    </div>
+
+    <button class="btn" id="go">Get Pairing Code</button>
+
+    <div class="code-box" id="codeBox">
+      <div class="code-label">Your pairing code</div>
+      <div class="code" id="code" title="Tap to copy">········</div>
+      <div class="code-hint" id="hint">Tap code to copy</div>
+      <div class="timer" id="timer"></div>
+    </div>
+
+    <div class="steps" id="steps">
+      <h2>Ab yeh karein</h2>
+      <ol>
+        <li>Phone par <b>WhatsApp</b> kholein</li>
+        <li><b>Settings</b> → <b>Linked Devices</b> → <b>Link a Device</b></li>
+        <li><b>“Link with phone number instead”</b> par tap karein</li>
+        <li>Upar wala <b>8-digit code</b> wahan daalein</li>
+      </ol>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <button class="btn ghost" id="again" style="display:none">Naya code lein</button>
+  </div>
+
+  <div class="foot">
+    Code ~2 minute tak valid rehta hai.<br>
+    Bot online: <span id="ping">checking…</span>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
